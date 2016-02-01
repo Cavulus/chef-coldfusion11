@@ -17,7 +17,7 @@
 # limitations under the License.
 
 
-module cf11Entmanager 
+module CF11Entmanager 
 
   def get_instance_data(instance, node)
 
@@ -26,7 +26,7 @@ module cf11Entmanager
     # Find the instance in the ColdFuison server's instances.xml
     instances_xml_doc = REXML::Document.new ::File.new("#{node['cf11']['installer']['install_folder']}/config/instances.xml")
     server_xml_element = nil
-    instances_xml_doc.root.each_element { |e| 
+    instances_xml_doc.root.each_element { |e|
       server_xml_element = e if e.elements["name"].text.strip == instance
     }
     Chef::Application.fatal!("No instance named #{instance} found.") unless server_xml_element
@@ -42,9 +42,9 @@ module cf11Entmanager
     instance_data = Hash.new()
     instance_data["dir"] = dir
     instance_data["http_port"] = http_port
-    
+
     instance_data
-    
+
   end
 
   def init_instance(instance, admin_pwd, node)
@@ -60,23 +60,23 @@ module cf11Entmanager
     post_retries = 0
     pending_successful_post = true
 
-    while post_retries < 6 && pending_successful_post      
+    while post_retries < 6 && pending_successful_post
       begin
         sleep(post_retries + post_retries * 2)
         post_res = Net::HTTP.post_form(post_uri, "cfadminPassword" => pwd_digest.upcase, "requestedURL" => "%2FCFIDE%2Fadministrator%2Findex.cfm", "submit" => "Login")
         case post_res
         when Net::HTTPSuccess then
-          pending_successful_post = false 
+          pending_successful_post = false
           Chef::Log.debug("Successfully called #{post_uri.to_s}.")
         else
           raise "Error calling #{post_uri.to_s}."
         end
-      rescue Exception       
-        Chef::Application.fatal!("Unable to call #{post_uri.to_s} to initialze ColdFusion instance #{instance}.") if post_retries >= 5        
+      rescue Exception
+        Chef::Application.fatal!("Unable to call #{post_uri.to_s} to initialze ColdFusion instance #{instance}.") if post_retries >= 5
         post_retries += 1
         Chef::Log.debug("Error calling #{post_uri.to_s}. Retrying in #{post_retries + post_retries * 2} seconds.")
       end
-    end 
+    end
 
     # next get /CFIDE/administrator/index.cfm?configServer=true until server is configured
 
@@ -92,10 +92,10 @@ module cf11Entmanager
     headers = { 'Cookie' => cookies.join(';') }
     get_retries = 0
     pending_successful_get = true
-    
-    while get_retries < 6 && pending_successful_get 
+
+    while get_retries < 6 && pending_successful_get
       begin
-        sleep(get_retries + get_retries * 2)        
+        sleep(get_retries + get_retries * 2)
         get_req = Net::HTTP::Get.new(get_url.path + "?" + get_url.query, headers)
         get_res = Net::HTTP.start(get_url.host, get_url.port) {|http|
           http.request(get_req)
@@ -103,19 +103,19 @@ module cf11Entmanager
         case get_res
         when Net::HTTPSuccess then
           if get_res.body.match(/\<title\>ColdFusion: Setup Complete\<\/title\>/) != nil
-            pending_successful_get = false 
+            pending_successful_get = false
             Chef::Log.debug("Successfully setup ColdFusion instance #{instance}.")
-          else        
-            Chef::Application.fatal!("Unable to call #{get_url.to_s} to initialze ColdFusion instance #{instance}.") if get_retries >= 5 
-            get_retries += 1  
+          else
+            Chef::Application.fatal!("Unable to call #{get_url.to_s} to initialze ColdFusion instance #{instance}.") if get_retries >= 5
+            get_retries += 1
             Chef::Log.debug("ColdFusion instance #{instance} not initialized. Waiting #{get_retries + get_retries * 2} seconds to call #{get_url.to_s} again to initialze instance.")
             next
-          end 
+          end
         else
           raise "Error calling #{get_url.to_s}."
         end
-      rescue Exception     
-        Chef::Application.fatal!("Unable to call #{get_url.to_s} to initialze ColdFusion instance #{instance}.") if get_retries >= 5        
+      rescue Exception
+        Chef::Application.fatal!("Unable to call #{get_url.to_s} to initialze ColdFusion instance #{instance}.") if get_retries >= 5
         get_retries += 1
         Chef::Log.debug("Error calling #{get_url.to_s}. Retrying in #{get_retries + get_retries * 2} seconds.")
       end
@@ -124,7 +124,7 @@ module cf11Entmanager
   end
 
   def update_node_instances(node)
-    
+
     require "rexml/document"
 
     ::File.open("#{node['cf11']['installer']['install_folder']}/config/instances.xml") { |f|
@@ -135,13 +135,13 @@ module cf11Entmanager
     remote_instances = []
 
     # Find the instance in the ColdFuison server's instances.xml
-    if ::File.exists?("#{node['cf11']['installer']['install_folder']}/config/instances.xml")     
-      instances_xml_doc = REXML::Document.new ::File.new("#{node['cf11']['installer']['install_folder']}/config/instances.xml")      
-      instances_xml_doc.root.each_element { |e| 
+    if ::File.exists?("#{node['cf11']['installer']['install_folder']}/config/instances.xml")
+      instances_xml_doc = REXML::Document.new ::File.new("#{node['cf11']['installer']['install_folder']}/config/instances.xml")
+      instances_xml_doc.root.each_element { |e|
         local_instances.push( e.elements["name"].text.strip ) unless e.attributes["remote"]
         remote_instances.push( e.elements["name"].text.strip ) if e.attributes["remote"]
       }
-    end 
+    end
 
     node.set['cf11']['instances_local'] = local_instances.join(",")
     node.set['cf11']['instances_remote'] = remote_instances.join(",")
@@ -155,4 +155,3 @@ module cf11Entmanager
   end
 
 end
- 

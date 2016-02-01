@@ -17,22 +17,22 @@
 # limitations under the License.
 
 
-module cf11Providers 
+module CF11Providers 
 
   include Chef::Mixin::Checksum
-  
+
   def install_configmanager( cfide_dir, cf_user )
 
     version_file = "#{cfide_dir}/administrator/configmanager/version"
     unless ::File.exists?(version_file) && ::File.open(version_file) { |f| f.grep(/0\.3\.0/) }.length != 0
- 
-      # Make sure we have unzip package  
+
+      # Make sure we have unzip package
       p = package "unzip" do
         action :nothing
       end
 
       p.run_action(:install)
-      
+
       cf = cookbook_file "#{Chef::Config['file_cache_path']}/configmanager.zip" do
         source "configmanager.zip"
         cookbook "coldfusion11"
@@ -42,7 +42,7 @@ module cf11Providers
         group "root"
       end
 
-      cf.run_action(:create_if_missing) 
+      cf.run_action(:create_if_missing)
 
       # Install the application
       e = execute "extract_configmanager" do
@@ -61,21 +61,21 @@ COMMAND
 
   def make_api_call( msg, api_url, config_glob, admin_pwd )
 
-    made_update = false   
-     
+    made_update = false
+
     # Get config state before attempted update
     before = Dir.glob(config_glob).map { |filename| checksum(filename) }
 
     Chef::Log.debug("Making API call to #{api_url}")
 
     # Make API call
-    case 
+    case
     when Gem::Version.new(node.chef_packages.chef.version) < Gem::Version.new('11.8')
       hr = http_request "post_config" do
         action :nothing
         url api_url
         message msg
-        headers({"AUTHORIZATION" => "Basic #{Base64.encode64("admin:#{admin_pwd}")}"}) 
+        headers({"AUTHORIZATION" => "Basic #{Base64.encode64("admin:#{admin_pwd}")}"})
       end
     else
       hr = http_request "post_config" do
@@ -91,7 +91,7 @@ COMMAND
     # Get config state after attempted update
     after = Dir.glob(config_glob).map { |filename| checksum(filename) }
 
-    made_update = true if (after - before).length > 0 
+    made_update = true if (after - before).length > 0
 
     made_update
 
@@ -109,4 +109,3 @@ COMMAND
 
 
 end
-

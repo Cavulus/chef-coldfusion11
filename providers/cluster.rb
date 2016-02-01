@@ -18,14 +18,14 @@
 #
 
 include Chef::Mixin::Checksum
-include cf11Entmanager
-include cf11Providers
-include cf11Passwords
+include CF11Entmanager
+include CF11Providers
+include CF11Passwords
 
 def initialize(*args)
   super
-   
-  instance_data = get_instance_data("cfusion", node) 
+
+  instance_data = get_instance_data("cfusion", node)
   @api_url = "http://localhost:#{instance_data['http_port']}/CFIDE/administrator/configmanager/api/entmanager.cfm"
   install_configmanager("#{instance_data['dir']}/wwwroot/CFIDE", node['cf11']['installer']['runtimeuser'])
 
@@ -36,11 +36,11 @@ action :add_cluster do
   params = { "clusterName" => new_resource.name }
   %w{ servers multicast_port sticky_sessions }.each do |param|
     if new_resource.send param
-      params[camelize(param)] = new_resource.send param 
+      params[camelize(param)] = new_resource.send param
     end
-  end 
+  end
 
-  if make_entmanager_api_call("addCluster",params) 
+  if make_entmanager_api_call("addCluster",params)
     new_resource.updated_by_last_action(true)
      # Register the cluster
     ruby_block "register_cluster_#{new_resource.name}" do
@@ -53,7 +53,7 @@ action :add_cluster do
     Chef::Log.info("Updated ColdFusion cluster configuration.")
   else
     Chef::Log.info("No ColdFusion cluster changes made.")
-  end  
+  end
 
 end
 

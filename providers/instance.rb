@@ -18,16 +18,16 @@
 #
 
 include Chef::Mixin::Checksum
-include cf11Entmanager
-include cf11Providers
-include cf11Passwords
+include CF11Entmanager
+include CF11Providers
+include CF11Passwords
 
 def initialize(*args)
   super
-   
-  instance_data = get_instance_data("cfusion", node)  
+
+  instance_data = get_instance_data("cfusion", node)
   @api_url = "http://localhost:#{instance_data['http_port']}/CFIDE/administrator/configmanager/api/entmanager.cfm"
-  @pwds = get_passwords(node) 
+  @pwds = get_passwords(node)
   install_configmanager("#{instance_data['dir']}/wwwroot/CFIDE", node['cf11']['installer']['runtimeuser'])
 
 
@@ -38,11 +38,11 @@ action :add_server do
   params = { "serverName" => new_resource.name }
   %w{ server_dir }.each do |param|
     if new_resource.send param
-      params[camelize(param)] = new_resource.send param 
+      params[camelize(param)] = new_resource.send param
     end
-  end 
+  end
 
-  if make_entmanager_api_call("addServer",params) 
+  if make_entmanager_api_call("addServer",params)
     new_resource.updated_by_last_action(true)
 
     # Register the instance
@@ -53,8 +53,8 @@ action :add_server do
       end
       action :create
     end
-   
-    if new_resource.create_service 
+
+    if new_resource.create_service
 
       instance_data = get_instance_data(new_resource.name, node)
       service_name = new_resource.service_name || new_resource.name
@@ -88,30 +88,30 @@ action :add_server do
       end
 
     end
-    
+
     Chef::Log.info("Updated ColdFusion instance configuration.")
   else
     Chef::Log.info("No ColdFusion instance changes made.")
-  end 
+  end
 
 end
 
 action :add_remote_server do
 
-  params = { "remoteServerName" => new_resource.name }  
+  params = { "remoteServerName" => new_resource.name }
   %w{ host jvm_route remote_port http_port admin_port admin_username admin_password lb_factor https }.each do |param|
     if new_resource.send param
-      params[camelize(param)] = new_resource.send param 
+      params[camelize(param)] = new_resource.send param
     end
-  end 
-  
-  if make_entmanager_api_call("addRemoteServer",params) 
+  end
+
+  if make_entmanager_api_call("addRemoteServer",params)
     new_resource.updated_by_last_action(true)
     update_node_instances(node)
     Chef::Log.info("Updated ColdFusion instance configuration.")
   else
     Chef::Log.info("No ColdFusion instance changes made.")
-  end  
+  end
 
 end
 

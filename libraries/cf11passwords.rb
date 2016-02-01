@@ -17,7 +17,7 @@
 # limitations under the License.
 
 
-module cf11Passwords 
+module CF11Passwords 
 
   def get_passwords(node)
 
@@ -27,13 +27,13 @@ module cf11Passwords
 
     begin
       if Chef::Config[:solo]
-      begin 
+      begin
         password_databag = Chef::DataBagItem.load("cf11",node['cf11']['installer']['password_databag'])
       rescue
         Chef::Log.info("No coldfusion11 passwords data bag found")
       end
     else
-      begin 
+      begin
         password_databag = Chef::EncryptedDataBagItem.load("cf11",node['cf11']['installer']['password_databag'])
       rescue
         Chef::Log.info("No coldfusion11 passwords encrypted data bag found")
@@ -46,9 +46,9 @@ module cf11Passwords
       jetty_password = password_databag["jetty_password"]
       rds_password = password_databag["rds_password"]
 
-    end 
+    end
 
-    ensure 
+    ensure
 
       passwords["admin_password"] = admin_password || node["cf11"]["installer"]["admin_password"]
       passwords["jetty_password"] = jetty_password || node["cf11"]["installer"]["jetty_password"]
@@ -61,4 +61,3 @@ module cf11Passwords
   end
 
 end
-

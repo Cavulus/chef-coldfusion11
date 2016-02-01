@@ -18,14 +18,14 @@
 #
 
 include Chef::Mixin::Checksum
-include cf11Entmanager
-include cf11Providers
-include cf11Passwords
+include CF11Entmanager
+include CF11Providers
+include CF11Passwords
 
 
 def initialize(*args)
   super
-   
+
   instance_data = get_instance_data(new_resource.instance, node)
   new_resource.instance_dir = instance_data['dir']
   new_resource.instance_http_port = instance_data['http_port']
@@ -34,17 +34,17 @@ def initialize(*args)
 end
 
 action :set do
-  config = { new_resource.component => { new_resource.property => [ new_resource.args ] } } 
-  if make_config_api_call(config, new_resource) 
+  config = { new_resource.component => { new_resource.property => [ new_resource.args ] } }
+  if make_config_api_call(config, new_resource)
     new_resource.updated_by_last_action(true)
     Chef::Log.info("Updated ColdFusion #{new_resource.component} configuration.")
   else
     Chef::Log.info("No ColdFusion configuration changes made.")
-  end 
+  end
 end
 
 action :bulk_set do
-  config = new_resource.config 
+  config = new_resource.config
   if make_config_api_call(config, new_resource)
     new_resource.updated_by_last_action(true)
     Chef::Log.info("Updated ColdFusion configuration.")
@@ -59,8 +59,3 @@ def make_config_api_call( msg, new_resource )
   make_api_call( msg, "http://localhost:#{new_resource.instance_http_port}/CFIDE/administrator/configmanager/api/config.cfm", "#{new_resource.instance_dir}/lib/neo-*.xml", pwds['admin_password'] )
 
 end
-
-
-
-
-
