@@ -18,7 +18,7 @@
 #
 
 if !node['cf11']['installer']['installer_type'].match("ear|war")
-  Chef::Application.fatal!("ColdFusion 10 installer type must be 'ear' or 'war' for J2EE installation!")
+  Chef::Application.fatal!("ColdFusion 11 installer type must be 'ear' or 'war' for J2EE installation!")
 end
 
 # Run the installer
@@ -27,7 +27,7 @@ include_recipe "coldfusion11::install"
 # Explode EAR
 if node['cf11']['installer']['installer_type'] == "ear"
 
-  execute "Explode ColdFusion 10 EAR" do
+  execute "Explode ColdFusion 11 EAR" do
     cwd node['cf11']['installer']['install_folder']
     command <<-COMMAND
       mkdir cfusion
@@ -39,7 +39,7 @@ if node['cf11']['installer']['installer_type'] == "ear"
     action :run
   end
 
-  execute "Explode ColdFusion 10 WAR" do
+  execute "Explode ColdFusion 11 WAR" do
     cwd "#{node['cf11']['installer']['install_folder']}/cfusion.ear"
     command <<-COMMAND
       mkdir cfusion

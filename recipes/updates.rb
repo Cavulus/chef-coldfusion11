@@ -18,20 +18,20 @@
 #
 
 class Chef::Recipe
-  include cf11Entmanager 
+  include CF11Entmanager 
 end
 
-if Chef::Version.new(Chef::VERSION).major >= 11 
+if Chef::Version.new(Chef::VERSION).major >= 11
 	has_java = run_context.loaded_recipe?("java")
-else 
+else
 	has_java = node.recipe?("java")
 end
 
-if has_java && node['java']['install_flavor'] == "oracle" 
+if has_java && node['java']['install_flavor'] == "oracle"
   node.set['cf11']['java']['home'] = node['java']['java_home']
 end
 unless node['cf11']['java']['home']
-  node.set['cf11']['java']['home'] = node['cf11']['installer']['install_folder'] 
+  node.set['cf11']['java']['home'] = node['cf11']['installer']['install_folder']
 end
 
 updates_jars = node['cf11']['updates']['files'].dup
@@ -50,10 +50,10 @@ template "#{Chef::Config['file_cache_path']}/update-installer.properties" do
   owner node['cf11']['installer']['runtimeuser']
 end
 
-# Run updates 
+# Run updates
 node['cf11']['updates']['urls'].each do | update |
 
-  # Only apply an update if it or a later update doesn't exist 
+  # Only apply an update if it or a later update doesn't exist
   if updates_jars.select { |x| File.exists?("#{node['cf11']['installer']['install_folder']}/cfusion/lib/updates/#{x}") }.empty?
 
     file_name = update.split('/').last
@@ -96,7 +96,7 @@ node['cf11']['updates']['urls'].each do | update |
       action :remove
     end
 
-  end 
+  end
 
   updates_jars.shift
 

@@ -18,13 +18,13 @@
 #
 
 class Chef::Recipe
-  include cf11Entmanager
-  include cf11Passwords
+  include CF11Entmanager
+  include CF11Passwords
 end
 
 class Chef::Resource::RubyBlock
-  include cf11Entmanager
-  include cf11Passwords
+  include CF11Entmanager
+  include CF11Passwords
 end
 
 # Load password from encrypted data bag, data bag (:solo), or node attribute
