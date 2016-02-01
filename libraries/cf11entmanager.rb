@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: coldfusion10
-# Library:: cf10entmanger
+# Cookbook Name:: coldfusion11
+# Library:: cf11entmanger
 #
 # Copyright 2013, Nathan Mische
 #
@@ -17,14 +17,14 @@
 # limitations under the License.
 
 
-module CF10Entmanager 
+module cf11Entmanager 
 
   def get_instance_data(instance, node)
 
     require "rexml/document"
 
     # Find the instance in the ColdFuison server's instances.xml
-    instances_xml_doc = REXML::Document.new ::File.new("#{node['cf10']['installer']['install_folder']}/config/instances.xml")
+    instances_xml_doc = REXML::Document.new ::File.new("#{node['cf11']['installer']['install_folder']}/config/instances.xml")
     server_xml_element = nil
     instances_xml_doc.root.each_element { |e| 
       server_xml_element = e if e.elements["name"].text.strip == instance
@@ -127,31 +127,31 @@ module CF10Entmanager
     
     require "rexml/document"
 
-    ::File.open("#{node['cf10']['installer']['install_folder']}/config/instances.xml") { |f|
-        node.set['cf10']['instances_xml'] = f.read
-    } if File.exists?("#{node['cf10']['installer']['install_folder']}/config/instances.xml")
+    ::File.open("#{node['cf11']['installer']['install_folder']}/config/instances.xml") { |f|
+        node.set['cf11']['instances_xml'] = f.read
+    } if File.exists?("#{node['cf11']['installer']['install_folder']}/config/instances.xml")
 
     local_instances = []
     remote_instances = []
 
     # Find the instance in the ColdFuison server's instances.xml
-    if ::File.exists?("#{node['cf10']['installer']['install_folder']}/config/instances.xml")     
-      instances_xml_doc = REXML::Document.new ::File.new("#{node['cf10']['installer']['install_folder']}/config/instances.xml")      
+    if ::File.exists?("#{node['cf11']['installer']['install_folder']}/config/instances.xml")     
+      instances_xml_doc = REXML::Document.new ::File.new("#{node['cf11']['installer']['install_folder']}/config/instances.xml")      
       instances_xml_doc.root.each_element { |e| 
         local_instances.push( e.elements["name"].text.strip ) unless e.attributes["remote"]
         remote_instances.push( e.elements["name"].text.strip ) if e.attributes["remote"]
       }
     end 
 
-    node.set['cf10']['instances_local'] = local_instances.join(",")
-    node.set['cf10']['instances_remote'] = remote_instances.join(",")
+    node.set['cf11']['instances_local'] = local_instances.join(",")
+    node.set['cf11']['instances_remote'] = remote_instances.join(",")
 
   end
 
   def update_node_clusters(node)
-    ::File.open("#{node['cf10']['installer']['install_folder']}/config/cluster.xml") { |f|
-        node.set['cf10']['cluster_xml'] = f.read
-    } if File.exists?("#{node['cf10']['installer']['install_folder']}/config/cluster.xml")
+    ::File.open("#{node['cf11']['installer']['install_folder']}/config/cluster.xml") { |f|
+        node.set['cf11']['cluster_xml'] = f.read
+    } if File.exists?("#{node['cf11']['installer']['install_folder']}/config/cluster.xml")
   end
 
 end

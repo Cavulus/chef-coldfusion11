@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: coldfusion10
+# Cookbook Name:: coldfusion11
 # Resources:: instance
 #
 # Copyright 2013, Nathan Mische
@@ -18,12 +18,12 @@
 #
 
 def initialize(*args)
-  super  
+  super
   @action = :add_server
 end
 
 actions :add_server, :add_remote_server
- 
+
 attribute :server_name,      :kind_of => String, :name_attribute => true
 attribute :create_service,   :kind_of => TrueClass, :default => false
 attribute :service_name,     :kind_of => String

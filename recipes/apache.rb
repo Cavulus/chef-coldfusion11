@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: coldfuison10
+# Cookbook Name:: coldfuison11
 # Recipe:: apache
 #
 # Copyright 2012, Nathan Mische
@@ -19,31 +19,31 @@
 
 # Disable the default site
 apache_site "000-default" do
-  enable false  
+  enable false
 end
 
 # Add ColdFusion site
 web_app "coldfusion" do
-  cookbook "coldfusion10"
+  cookbook "coldfusion11"
   template "coldfusion-site.conf.erb"
 end
 
 # Make sure CF is running
-execute "start_cf_for_coldfusion10_wsconfig" do
+execute "start_cf_for_coldfusion11_wsconfig" do
   command "/bin/true"
   notifies :start, "service[coldfusion]", :delayed
   notifies :run, "execute[uninstall_wsconfig]", :delayed
   notifies :run, "execute[install_wsconfig]", :delayed
-  only_if "#{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
+  only_if "#{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
 end
 
-# wsconfig 
+# wsconfig
 execute "install_wsconfig" do
   case node['platform_family']
     when "rhel", "fedora", "arch"
       command <<-COMMAND
       sleep 11
-      #{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -ws Apache -dir #{node['apache']['dir']}/conf -bin #{node['apache']['binary']} -script /usr/sbin/apachectl -v
+      #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -ws Apache -dir #{node['apache']['dir']}/conf -bin #{node['apache']['binary']} -script /usr/sbin/apachectl -v
       cp -f #{node['apache']['dir']}/conf/httpd.conf.1 #{node['apache']['dir']}/conf/httpd.conf
       cp -f #{node['apache']['dir']}/conf/mod_jk.conf #{node['apache']['dir']}/conf.d/mod_jk.conf
       sleep 11
@@ -51,15 +51,15 @@ execute "install_wsconfig" do
     else
       command <<-COMMAND
       sleep 11
-      #{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -ws Apache -dir #{node['apache']['dir']} -bin #{node['apache']['binary']} -script /usr/sbin/apache2ctl -v
-      cp -f #{node['apache']['dir']}/httpd.conf.1 #{node['apache']['dir']}/httpd.conf 
+      #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -ws Apache -dir #{node['apache']['dir']} -bin #{node['apache']['binary']} -script /usr/sbin/apache2ctl -v
+      cp -f #{node['apache']['dir']}/httpd.conf.1 #{node['apache']['dir']}/httpd.conf
       cp -f #{node['apache']['dir']}/mod_jk.conf #{node['apache']['dir']}/conf.d/mod_jk.conf
       sleep 11
       COMMAND
     end
-  action :nothing  
+  action :nothing
   notifies :restart, "service[apache2]", :immediately
-  only_if "#{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
+  only_if "#{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
 end
 
 execute "uninstall_wsconfig" do
@@ -67,22 +67,21 @@ execute "uninstall_wsconfig" do
     when "rhel", "fedora", "arch"
       command <<-COMMAND
       sleep 11
-      #{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -uninstall -bin #{node['apache']['binary']} -script /usr/sbin/apachectl -v
-      rm -f #{node['apache']['dir']}/conf/httpd.conf.1 
+      #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -uninstall -bin #{node['apache']['binary']} -script /usr/sbin/apachectl -v
+      rm -f #{node['apache']['dir']}/conf/httpd.conf.1
       rm -f #{node['apache']['dir']}/conf.d/mod_jk.conf
       sleep 11
       COMMAND
     else
       command <<-COMMAND
       sleep 11
-      #{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -uninstall -bin #{node['apache']['binary']} -script /usr/sbin/apache2ctl -v
+      #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -uninstall -bin #{node['apache']['binary']} -script /usr/sbin/apache2ctl -v
       rm -f #{node['apache']['dir']}/httpd.conf.1
       rm -f #{node['apache']['dir']}/conf.d/mod_jk.conf
       sleep 11
       COMMAND
     end
-  action :nothing  
+  action :nothing
   notifies :restart, "service[apache2]", :immediately
-  only_if "#{node['cf10']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list | grep 'Apache : #{node['apache']['dir']}'"
+  only_if "#{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list | grep 'Apache : #{node['apache']['dir']}'"
 end
-

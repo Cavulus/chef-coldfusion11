@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: coldfusion10
+# Cookbook Name:: coldfusion11
 # Resources:: cluster
 #
 # Copyright 2013, Nathan Mische
@@ -18,12 +18,12 @@
 #
 
 def initialize(*args)
-  super  
+  super
   @action = :add_cluster
 end
 
 actions :add_cluster
- 
+
 attribute :cluster_name,     :kind_of => String, :name_attribute => true
 attribute :servers,          :kind_of => String
 attribute :multicast_port,   :kind_of => Integer

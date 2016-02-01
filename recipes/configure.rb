@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: coldfuison10
+# Cookbook Name:: coldfuison11
 # Recipe:: configure
 #
 # Copyright 2012, Nathan Mische
@@ -18,14 +18,14 @@
 #
 
 # Make sure CF is running
-execute "start_cf_for_coldfusion10_configure" do
+execute "start_cf_for_coldfusion11_configure" do
   command "/bin/true"
   notifies :start, "service[coldfusion]", :immediately
 end
 
 # Configure via Admin API
-coldfusion10_config "bulk" do
+coldfusion11_config "bulk" do
   action :bulk_set
-  config node['cf10']['config_settings'].to_hash
+  config node['cf11']['config_settings'].to_hash
   notifies :restart, "service[coldfusion]", :delayed
 end

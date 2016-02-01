@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: coldfusion10
+# Cookbook Name:: coldfusion11
 # Resources:: config
 #
 # Copyright 2012, Nathan Mische
@@ -18,7 +18,7 @@
 #
 
 def initialize(*args)
-  super  
+  super
   @action = :set
   @instance = "cfusion"
 end
@@ -33,10 +33,3 @@ attribute :instance,           :kind_of => String, :default => "cfusion"
 
 attr_accessor :instance_dir
 attr_accessor :instance_http_port
-
-
-
-
-
-
-

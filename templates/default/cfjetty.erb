@@ -5,9 +5,9 @@
 
 
 PATH=/usr/xpg4/bin:/bin:/sbin:/usr/bin:/usr/sbin:$PATH
-RUNTIME_USER=<%= node['cf10']['installer']['runtimeuser'] %>
-SOLR="<%= node['cf10']['installer']['install_folder'] %>/cfusion/jetty"
-SOLR_JVM="<%= node['cf10']['installer']['install_folder'] %>/jre"
+RUNTIME_USER=<%= node['cf11']['installer']['runtimeuser'] %>
+SOLR="<%= node['cf11']['installer']['install_folder'] %>/cfusion/jetty"
+SOLR_JVM="<%= node['cf11']['installer']['install_folder'] %>/jre"
 SOLRPORT=8985
 STOPPORT=8077
 NETSTATCMD="netstat"
@@ -46,7 +46,7 @@ solrstart()
         echo "You are starting Admin Component for ColdFusion. Starting this service also starts Solr search service (if installed)."
 
         solrrunning
-        
+
         if [ "$IS_RUNNING" = "true" ]; then
            echo "ColdFusion Jetty service is already running or the port is not free"
            echo exiting
@@ -62,7 +62,7 @@ solrstart()
                 exit 2
     fi
         echo "ColdFusion Jetty Server is starting up and will be available shortly."
-        
+
 }
 
 # Run the solr admin stop script
@@ -76,7 +76,7 @@ solrstop()
        echo "Stopping ColdFusion Jetty Server, please wait"
        if [ -x $SOLR/start.jar ]
        then
-        eval $SOLRSTOP 
+        eval $SOLRSTOP
        else
                 echo "Could not locate start.jar. Exiting.."
                 exit 2
@@ -174,4 +174,3 @@ esac
 
 
 exit 0
-
