@@ -18,12 +18,12 @@
 #
 
 class Chef::Recipe
-  include cf11Entmanager 
+  include cf11Entmanager
   include cf11Passwords
 end
 
 class Chef::Resource::RubyBlock
-  include cf11Entmanager 
+  include cf11Entmanager
   include cf11Passwords
 end
 
@@ -31,16 +31,29 @@ end
 pwds = get_passwords(node)
 
 if !node['cf11']['installer']['installer_type'].match("standalone")
-  Chef::Application.fatal!("ColdFusion 10 installer type must be 'standalone' for standalone installation!")
+  Chef::Application.fatal!("ColdFusion 11 installer type must be 'standalone' for standalone installation!")
 end
 
 # Run the installer
 include_recipe "coldfusion11::install"
 
 # Link the init script
-link "/etc/init.d/coldfusion" do
-  to "#{node['cf11']['installer']['install_folder']}/cfusion/bin/coldfusion"
+#link "/etc/init.d/coldfusion" do
+#  to "#{node['cf11']['installer']['install_folder']}/cfusion/bin/coldfusion"
+#end
+
+template "coldfusion" do
+	path '/etc/init.d/coldfusion'
+	source 'service.erb'
+	owner 'root'
+	group 'root'
+	mode '0755'
+	force_unlink true
+	variables(
+		path: "#{node['cf11']['installer']['install_folder']}/cfusion/"
+	)
 end
+
 
 # Set up ColdFusion as a service
 coldfusion11_service "coldfusion" do
@@ -88,4 +101,3 @@ directory node['cf11']['webroot'] do
   action :create
   not_if { File.directory?(node['cf11']['webroot']) }
 end
-
