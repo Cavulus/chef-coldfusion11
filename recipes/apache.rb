@@ -37,6 +37,10 @@ execute "start_cf_for_coldfusion11_wsconfig" do
   only_if "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
 end
 
+execute "debugging" do
+  command "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list"
+end
+
 # wsconfig
 execute "install_wsconfig" do
   case node['platform_family']
