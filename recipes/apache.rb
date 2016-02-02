@@ -31,14 +31,10 @@ end
 # Make sure CF is running
 execute "start_cf_for_coldfusion11_wsconfig" do
   command "/bin/true"
-  notifies :start, "service[coldfusion]", :delayed
-  notifies :run, "execute[uninstall_wsconfig]", :delayed
-  notifies :run, "execute[install_wsconfig]", :delayed
+  notifies :start, "service[coldfusion]", :immediately
+  notifies :run, "execute[uninstall_wsconfig]", :immediately
+  notifies :run, "execute[install_wsconfig]", :immediately
   only_if "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
-end
-
-execute "debugging" do
-  command "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list"
 end
 
 # wsconfig
