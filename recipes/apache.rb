@@ -34,7 +34,7 @@ execute "start_cf_for_coldfusion11_wsconfig" do
   notifies :start, "service[coldfusion]", :delayed
   notifies :run, "execute[uninstall_wsconfig]", :delayed
   notifies :run, "execute[install_wsconfig]", :delayed
-  only_if "#{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
+  only_if "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
 end
 
 # wsconfig
@@ -59,7 +59,7 @@ execute "install_wsconfig" do
     end
   action :nothing
   notifies :restart, "service[apache2]", :immediately
-  only_if "#{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
+  only_if "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list 2>&1 | grep 'There are no configured web servers'"
 end
 
 execute "uninstall_wsconfig" do
@@ -83,5 +83,5 @@ execute "uninstall_wsconfig" do
     end
   action :nothing
   notifies :restart, "service[apache2]", :immediately
-  only_if "#{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list | grep 'Apache : #{node['apache']['dir']}'"
+  only_if "sudo #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -list | grep 'Apache : #{node['apache']['dir']}'"
 end
