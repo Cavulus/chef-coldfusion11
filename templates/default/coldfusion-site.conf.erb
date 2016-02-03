@@ -90,7 +90,7 @@
 
   #   SSL Engine Switch:
   #   Enable/Disable SSL for this virtual host.
-  #SSLEngine on
+  SSLEngine on
 
   #   A self-signed (snakeoil) certificate can be created by installing
   #   the ssl-cert package. See
@@ -98,8 +98,8 @@
   #   If both key and certificate are stored in the same file, only the
   #   SSLCertificateFile directive is needed.
 
-  #SSLCertificateFile    <%= node['cf11']['apache']['ssl_cert_file'] %>
-  #SSLCertificateKeyFile <%= node['cf11']['apache']['ssl_cert_key_file'] %>
+  SSLCertificateFile    <%= node['cf11']['apache']['ssl_cert_file'] %>
+  SSLCertificateKeyFile <%= node['cf11']['apache']['ssl_cert_key_file'] %>
 
   #   Server Certificate Chain:
   #   Point SSLCertificateChainFile at a file containing the
@@ -109,7 +109,7 @@
   #   when the CA certificates are directly appended to the server
   #   certificate for convinience.
   <% if node['cf11']['apache']['ssl_cert_chain_file'] %>
-  #SSLCertificateChainFile <%= node['cf11']['apache']['ssl_cert_chain_file'] %>
+  SSLCertificateChainFile <%= node['cf11']['apache']['ssl_cert_chain_file'] %>
   <% end %>
   #SSLCertificateChainFile /etc/apache2/ssl.crt/server-ca.crt
 
