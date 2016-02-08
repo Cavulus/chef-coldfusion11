@@ -129,7 +129,7 @@ unless ::File.exists?(connector_path)
 	src_filepath = "#{Chef::Config['file_cache_path']}/#{src_filename}"
 	extract_path = "#{Chef::Config['file_cache_path']}/mysql-j-connector"
 
-	remote_file 'src_filepath' do
+	remote_file src_filepath do
 	  source node['cf11']['mysql']['connector']['url']
 	  owner 'root'
 	  group 'root'
