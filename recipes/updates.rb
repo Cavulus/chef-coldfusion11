@@ -18,7 +18,7 @@
 #
 
 class Chef::Recipe
-  include CF11Entmanager 
+  include CF11Entmanager
 end
 
 if Chef::Version.new(Chef::VERSION).major >= 11
@@ -34,7 +34,7 @@ unless node['cf11']['java']['home']
   node.set['cf11']['java']['home'] = node['cf11']['installer']['install_folder']
 end
 
-updates_jars = node['cf11']['updates']['files'].dup
+update_dirs = node['cf11']['updates']['dirs'].dup
 
 # Make sure we have the latest node data
 ruby_block "refresh_node_data_for_updates" do
@@ -54,7 +54,7 @@ end
 node['cf11']['updates']['urls'].each do | update |
 
   # Only apply an update if it or a later update doesn't exist
-  if updates_jars.select { |x| File.exists?("#{node['cf11']['installer']['install_folder']}/cfusion/lib/updates/#{x}") }.empty?
+  if update_dirs.select { |x| Dir.exists?("#{node['cf11']['installer']['install_folder']}/cfusion/hf-updates/#{x}") }.empty?
 
     file_name = update.split('/').last
     sodo_name = "cf11_#{file_name.split('.').first}_sudo"
@@ -98,6 +98,6 @@ node['cf11']['updates']['urls'].each do | update |
 
   end
 
-  updates_jars.shift
+  update_dirs.shift
 
 end

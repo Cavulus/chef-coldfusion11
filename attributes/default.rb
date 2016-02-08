@@ -110,14 +110,14 @@ default['cf11']['updates']['urls'] = %w{
 	http://download.adobe.com/pub/adobe/coldfusion/11/hotfix_006.jar
 	http://download.adobe.com/pub/adobe/coldfusion/11/hotfix_007.jar
 }
-default['cf11']['updates']['files'] = %w{
-	hotfix_001.jar
-    hotfix_002.jar
-    hotfix_003.jar
-    hotfix_004.jar
-    hotfix_005.jar
-    hotfix_006.jar
-    hotfix_007.jar
+default['cf11']['updates']['dirs'] = %w{
+	hf-11-00001
+    hf-11-00002
+    hf-11-00003
+    hf-11-00004
+    hf-11-00005
+    hf-11-00006
+    hf-11-00007
 }
 
 # Tomcat or Apache web root
