@@ -120,3 +120,28 @@ template "#{node['cf11']['installer']['install_folder']}/cfusion/jetty/cfjetty" 
   mode 00755
   only_if { File.exists?("#{node['cf11']['installer']['install_folder']}/cfusion/jetty/cfjetty") }
 end
+
+
+connector_path = "#{node['cf11']['installer']['install_folder']}/cfusion/lib/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}-bin.jar"
+
+unless ::File.exists?(connector_path)
+	src_filename = "mysql-connector-java#{node['cf11']['mysql']['connector']['version']}.tar.gz"
+	src_filepath = "#{Chef::Config['file_cache_path']}/#{src_filename}"
+	extract_path = "#{Chef::Config['file_cache_path']}/mysql-j-connector"
+
+	remote_file 'src_filepath' do
+	  source node['cf11']['mysql']['connector']['url']
+	  owner 'root'
+	  group 'root'
+	  mode '0755'
+	end
+
+	bash 'extract' do
+	  cwd ::File.dirname(src_filepath)
+	  code <<-EOH
+	    mkdir -p #{extract_path}
+	    tar xzf #{src_filename} -C #{extract_path}
+	    mv #{extract_path}/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}-bin.jar #{connector_path}
+	    EOH
+	end
+end

@@ -122,3 +122,7 @@ default['cf11']['updates']['dirs'] = %w{
 
 # Tomcat or Apache web root
 default['cf11']['webroot'] = "/vagrant/wwwroot"
+
+# MySQL Connector no longer ships with CF
+default['cf11']['mysql']['connector']['version'] = '5.1.38'
+default['cf11']['mysql']['connector']['url'] = "https://dev.mysql.com/get/Downloads/Connector-J/#{node['cf11']['mysql']['connector']['version']}.tar.gz"
