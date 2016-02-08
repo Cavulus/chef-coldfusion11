@@ -17,7 +17,7 @@
 # limitations under the License.
 
 
-module CF11Entmanager 
+module CF11Entmanager
 
   def get_instance_data(instance, node)
 
@@ -34,8 +34,8 @@ module CF11Entmanager
     # Find the HTTP port from the instance's server.xml
     dir = server_xml_element.elements["directory"].text.strip
     server_xml_doc = REXML::Document.new ::File.new("#{dir}/runtime/conf/server.xml")
-    http_connector_xml_element = server_xml_doc.root.elements["//Connector[@protocol='org.apache.coyote.http11.Http11Protocol']"]
-    Chef::Application.fatal!("The #{instance} instance does not appear to be running an HTTP connector.") unless http_connector_xml_element
+    #http_connector_xml_element = server_xml_doc.root.elements["//Connector[@protocol='org.apache.coyote.http11.Http11Protocol']"]
+    #Chef::Application.fatal!("The #{instance} instance does not appear to be running an HTTP connector.") unless http_connector_xml_element
 
     http_port = http_connector_xml_element.attributes["port"]
 
