@@ -127,7 +127,7 @@ connector_path = "#{node['cf11']['installer']['install_folder']}/cfusion/lib/mys
 unless ::File.exists?(connector_path)
 	src_filename = "mysql-connector-java#{node['cf11']['mysql']['connector']['version']}.tar.gz"
 	src_filepath = "#{Chef::Config['file_cache_path']}/#{src_filename}"
-	extract_path = "#{Chef::Config['file_cache_path']}/mysql-j-connector"
+	extract_path = "#{Chef::Config['file_cache_path']}"
 
 	remote_file src_filepath do
 	  source node['cf11']['mysql']['connector']['url']
@@ -141,7 +141,7 @@ unless ::File.exists?(connector_path)
 	  code <<-EOH
 	    mkdir -p #{extract_path}
 	    tar xzf #{src_filepath} -C #{extract_path}
-	    mv #{extract_path}/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}-bin.jar #{connector_path}
+	    mv #{extract_path}/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}-bin.jar #{connector_path}
 	    EOH
 	end
 end
