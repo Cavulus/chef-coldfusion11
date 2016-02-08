@@ -9,8 +9,7 @@
   <Directory <%= node['cf11']['webroot'] %>>
           Options Indexes FollowSymLinks MultiViews
           AllowOverride FileInfo Options
-          Order allow,deny
-          Allow from all
+		  Require all granted
           # This directive allows us to have apache2's default start page
           # in /apache2-default/, but still have / go to the right place
           #RedirectMatch ^/$ /apache2-default/
@@ -31,8 +30,7 @@
   <Directory "<%= node['cf11']['installer']['install_folder']%>/cfusion/wwwroot/CFIDE">
       Options Indexes MultiViews
       AllowOverride None
-      Order allow,deny
-      Allow from all
+	  Require all granted
   </Directory>
 
   <IfModule mod_jk.c>
