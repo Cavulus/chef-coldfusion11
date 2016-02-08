@@ -52,8 +52,9 @@ execute "install_wsconfig" do
       command <<-COMMAND
       sleep 11
       #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -ws Apache -dir #{node['apache']['dir']} -bin #{node['apache']['binary']} -script /usr/sbin/apache2ctl -v
-      cp -f #{node['apache']['dir']}/httpd.conf.1 #{node['apache']['dir']}/httpd.conf
-      cp -f #{node['apache']['dir']}/mod_jk.conf #{node['apache']['dir']}/conf.d/mod_jk.conf
+      cp -f #{node['apache']['dir']}/apache2.conf.1 #{node['apache']['dir']}/apache2.conf
+      mv -f #{node['apache']['dir']}/mod_jk.conf #{node['apache']['dir']}/conf-available/mod_jk.conf
+	  a2enconf mod_jk
       sleep 11
       COMMAND
     end
@@ -77,7 +78,8 @@ execute "uninstall_wsconfig" do
       sleep 11
       #{node['cf11']['installer']['install_folder']}/cfusion/runtime/bin/wsconfig -uninstall -bin #{node['apache']['binary']} -script /usr/sbin/apache2ctl -v
       rm -f #{node['apache']['dir']}/httpd.conf.1
-      rm -f #{node['apache']['dir']}/conf.d/mod_jk.conf
+	  a2disconf mod_jk
+      rm -f #{node['apache']['dir']}/conf-available/mod_jk.conf
       sleep 11
       COMMAND
     end

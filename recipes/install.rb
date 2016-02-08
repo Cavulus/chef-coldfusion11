@@ -142,6 +142,8 @@ unless ::File.exists?(connector_path)
 	    mkdir -p #{extract_path}
 	    tar xzf #{src_filepath} -C #{extract_path}
 	    mv #{extract_path}/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}/mysql-connector-java-#{node['cf11']['mysql']['connector']['version']}-bin.jar #{connector_path}
+		chown #{node['cf11']['installer']['runtimeuser']} #{connector_path}
+		chmod 755 #{connector_path}
 	    EOH
 	end
 end
